@@ -18,53 +18,12 @@ public class MissionController {
     @GetMapping("/region/{regionID}")
     public ApiResponse<MissionResDTO.MissionListDTO> getRegionMissions(
             @PathVariable(name = "regionID") Long regionID,
-            @RequestParam(defaultValue = "CHALLENGING") MissionStatus status
+            @RequestParam(defaultValue = "CHALLENGING") MissionStatus status,
+            @RequestParam(defaultValue = "0") Integer page
     ) {
         // MissionService의 메서드를 호출
-        MissionResDTO.MissionListDTO response = missionService.getMissionsByRegion(regionID, status);
+        MissionResDTO.MissionListDTO response = missionService.getMissionsByRegionRaw(regionID, status, page);
 
         return ApiResponse.onSuccess(response);
     }
-
-
-    /*
-    // 아무것도 받지 않은 경우
-    @GetMapping("/test")
-    public String test(){
-        return "test";
-    }
-
-    // Query Parameter
-    @PostMapping("/query-parameter")
-    public String exception(
-            @RequestParam String queryParameter
-    ){
-        return missionService.singleParameter(queryParameter);
-    }
-
-    // Request Body 
-    @PostMapping("/request-body")
-    public MissionResDTO.RequestBody requestBody(
-            @RequestBody MissionReqDTO.RequestBody dto
-    ){
-        return missionService.requestBody(dto);
-    }
-
-    // Path Variable
-    @PostMapping("/{pathVariable}")
-    public String pathVariable(
-            @PathVariable String pathVariable
-    ){
-        return missionService.singleParameter(pathVariable);
-    }
-
-    // Header
-    @PostMapping("/header")
-    public String header(
-            @RequestHeader("test") String test
-    ){
-        return missionService.singleParameter(test);
-    }
-
-     */
 }
