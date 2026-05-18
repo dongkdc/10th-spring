@@ -15,10 +15,11 @@ public class MissionController {
 
     private final MissionService missionService;
 
+    // 지역별 수행 가능 미션(홈 화면 쿼리)
     @GetMapping("/region/{regionID}")
     public ApiResponse<MissionResDTO.MissionListDTO> getRegionMissions(
             @PathVariable(name = "regionID") Long regionID,
-            @RequestParam(defaultValue = "CHALLENGING") MissionStatus status,
+            @RequestParam(defaultValue = "READY") MissionStatus status,
             @RequestParam(defaultValue = "0") Integer page
     ) {
         // MissionService의 메서드를 호출
