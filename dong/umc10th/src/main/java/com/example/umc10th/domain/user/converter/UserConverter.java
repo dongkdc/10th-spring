@@ -22,14 +22,15 @@ public class UserConverter {
                 .build();
     }
 
-    public static UserResDTO.UserMissionListDTO toUserMissionListDTO(List<UserMission> userMissionList) {
-        List<UserResDTO.UserMissionDetailDTO> detailDTOList = userMissionList.stream()
-                .map(UserConverter::toUserMissionDetailDTO)
-                .collect(Collectors.toList());
-
-        return UserResDTO.UserMissionListDTO.builder()
-                .userMissionDetailDTOList(detailDTOList)
-                .listSize(detailDTOList.size())
+    public static <T> UserResDTO.Pagination<T> toPagination(
+            List<T> data,
+            Integer pageNumber,
+            Integer pageSize
+    ){
+        return UserResDTO.Pagination.<T>builder()
+                .data(data)
+                .pageNumber(pageNumber)
+                .pageSize(pageSize)
                 .build();
     }
 }

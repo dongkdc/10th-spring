@@ -11,14 +11,6 @@ import java.util.List;
 
 
 public class UserResDTO {
-    @Builder
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class UserMissionListDTO{
-        List<UserMissionDetailDTO> userMissionDetailDTOList;
-        Integer listSize;
-    }
 
     @Builder
     @Getter
@@ -32,4 +24,11 @@ public class UserResDTO {
         MissionStatus status;
         LocalDate deadline;
     }
+
+    @Builder
+    public record Pagination<T>(
+            List<T> data,
+            Integer pageNumber,
+            Integer pageSize
+    ){}
 }

@@ -6,6 +6,9 @@ import com.example.umc10th.domain.user.repository.UserMissionRepository;
 import com.example.umc10th.domain.user.converter.UserConverter;
 import com.example.umc10th.domain.user.dto.UserResDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,12 +19,30 @@ public class UserService {
 
     private final UserMissionRepository userMissionRepository;
 
-    public UserResDTO.UserMissionListDTO getMissionsByUserID(Long userId, MissionStatus status, Integer page) {
-        int limit = 10;
-        int offset = page * limit;
+    public UserResDTO.Pagination<UserResDTO.UserMissionDetailDTO> getMissionsByUserID(
+            Long userId,
+            MissionStatus status,
+            Integer pageSize,
+            Integer pageNumber,
+            String sort
+    ) {
+        Sort sortInfo;
+        if(sort != null){
+            sortInfo = Sort.by(sort);
+        } else {
+            sortInfo = Sort.by("id").descending();
+        }
 
-        List<UserMission> userMissionList = userMissionRepository.findAllByUserIdAndStatus(userId, status);
-        return UserConverter.toUserMissionListDTO(userMissionList);
+        PageRequest pageRequest = PageRequest.of(pageNumber,pageSize,sortInfo);
+
+        Page<UserMission> userMissionList = userMissionRepository.findAllByUserIdAndStatus(userId,status,pageRequest);
+
+        // 미션들 응답 DTO로 포장하기
+        return UserConverter.toPagination(
+                userMissionList.map(UserConverter::toUserMissionDetailDTO).toList(),
+                userMissionList.getNumber(),
+                userMissionList.getSize()
+        );
     }
 
 }

@@ -1,12 +1,13 @@
 package com.example.umc10th.domain.user.controller;
 
-import com.example.umc10th.domain.mission.dto.MissionResDTO;
 import com.example.umc10th.domain.mission.enums.MissionStatus;
-import com.example.umc10th.domain.mission.service.MissionService;
+import com.example.umc10th.domain.mission.exception.code.MissionSuccessCode;
 import com.example.umc10th.domain.user.dto.UserResDTO;
 import com.example.umc10th.domain.user.service.UserService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
+import com.example.umc10th.global.apiPayload.code.BaseSuccessCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,14 +18,16 @@ public class UserController {
     private final UserService userService;
 
     // 내 미션을 모아서 보는 쿼리(진행중/완료)
-    @GetMapping("/{userID}/missions")
-    public ApiResponse<UserResDTO.UserMissionListDTO> getUserMissions(
-            @PathVariable(name = "userID") Long userID,
+    @GetMapping("/{userId}/missions")
+    public ApiResponse<UserResDTO.Pagination<UserResDTO.UserMissionDetailDTO>> getUserMissions(
+            @PathVariable(name = "userId") Long userId,
             @RequestParam(defaultValue = "CHALLENGING") MissionStatus status,
-            @RequestParam(defaultValue = "0") Integer page
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "0") Integer pageNumber,
+            @RequestParam(required = false) String sort
     ) {
-        UserResDTO.UserMissionListDTO response = userService.getMissionsByUserID(userID, status, page);
-
-        return ApiResponse.onSuccess(response);
+        UserResDTO.Pagination<UserResDTO.UserMissionDetailDTO> response = userService.getMissionsByUserID(userId, status, pageSize, pageNumber, sort);
+        BaseSuccessCode code = MissionSuccessCode.MISSION_OK;
+        return ApiResponse.onSuccess(code, response);
     }
 }
