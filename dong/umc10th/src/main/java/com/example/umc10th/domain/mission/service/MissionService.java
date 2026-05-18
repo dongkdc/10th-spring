@@ -17,13 +17,6 @@ public class MissionService {
 
     private final MissionRepository missionRepository;
 
-    //    public MissionResDTO.MissionListDTO getMissionsByRegion(Long regionID, MissionStatus status) {
-//
-//        // RegionRepository 없이 바로 ID로 미션들을 찾아옵니다.
-//        List<Mission> missionList = missionRepository.findAllByStoreRegionIdAndStatus(regionID, status);
-//
-//        return MissionConverter.toMissionListDTO(missionList);
-//    }
     public MissionResDTO.MissionListDTO getMissionsByRegionRaw(Long regionID, MissionStatus status, Integer page) {
         int limit = 10;
         int offset = page * limit; // 페이지 번호에 따라 시작 지점 계산
