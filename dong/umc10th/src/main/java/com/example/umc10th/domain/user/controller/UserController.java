@@ -2,6 +2,7 @@ package com.example.umc10th.domain.user.controller;
 
 import com.example.umc10th.domain.mission.enums.MissionStatus;
 import com.example.umc10th.domain.mission.exception.code.MissionSuccessCode;
+import com.example.umc10th.domain.user.dto.UserReqDTO;
 import com.example.umc10th.domain.user.dto.UserResDTO;
 import com.example.umc10th.domain.user.service.UserService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
@@ -18,15 +19,15 @@ public class UserController {
     private final UserService userService;
 
     // 내 미션을 모아서 보는 쿼리(진행중/완료)
-    @GetMapping("/{userId}/missions")
+    @PostMapping("/missions")
     public ApiResponse<UserResDTO.Pagination<UserResDTO.UserMissionDetailDTO>> getUserMissions(
-            @PathVariable(name = "userId") Long userId,
+            @RequestBody UserReqDTO.UserIdReqDTO request,
             @RequestParam(defaultValue = "CHALLENGING") MissionStatus status,
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(defaultValue = "0") Integer pageNumber,
             @RequestParam(required = false) String sort
     ) {
-        UserResDTO.Pagination<UserResDTO.UserMissionDetailDTO> response = userService.getMissionsByUserID(userId, status, pageSize, pageNumber, sort);
+        UserResDTO.Pagination<UserResDTO.UserMissionDetailDTO> response = userService.getMissionsByUserID(request.getUserId(), status, pageSize, pageNumber, sort);
         BaseSuccessCode code = MissionSuccessCode.MISSION_OK;
         return ApiResponse.onSuccess(code, response);
     }
